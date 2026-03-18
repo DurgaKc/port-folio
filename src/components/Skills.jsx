@@ -21,7 +21,6 @@ const categories = [
     skills: [
       { name: "React", icon: <FaReact />, level: 95, color: "#4A90E2" },
       { name: "JavaScript", icon: <FaJs />, level: 95, color: "#FFD700" },
-
       { name: "Tailwind", icon: <FaCss3Alt />, level: 87, color: "#6366f1" },
       { name: "Vite", icon: <FaCode />, level: 88, color: "#a855f7" },
     ],
@@ -49,8 +48,9 @@ function PieChart({ skills }) {
   const total = skills.reduce((sum, s) => sum + s.level, 0);
   let offset = 0;
 
+  // Responsive SVG size
   return (
-    <svg width="250" height="250" viewBox="0 0 250 250">
+    <svg width="200" height="200" viewBox="0 0 250 250" className="w-40 h-40 sm:w-48 sm:h-48 md:w-56 md:h-56 lg:w-64 lg:h-64">
       <g transform="translate(125,125)">
         {skills.map((s, i) => {
           const arcLength = (s.level / total) * circumference;
@@ -87,13 +87,13 @@ function CategoryChart({ category }) {
   return (
     <motion.div
       ref={ref}
-      className="flex flex-col items-center gap-6 w-full"
+      className="flex flex-col items-center gap-4 w-full bg-white dark:bg-[#1a1f3a] rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow"
       initial={{ opacity: 0, y: 40 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.6 }}
     >
       <motion.h3
-        className="text-2xl font-bold text-[#4A90E2]"
+        className="text-xl md:text-2xl font-bold text-[#4A90E2]"
         initial={{ opacity: 0, y: -20 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.5 }}
@@ -101,18 +101,18 @@ function CategoryChart({ category }) {
         {category.name}
       </motion.h3>
 
-      <div className="flex flex-col items-center gap-8">
+      <div className="flex flex-col items-center gap-4 w-full">
         <PieChart skills={category.skills} />
 
         <motion.div
-          className="flex flex-col gap-3"
+          className="flex flex-wrap justify-center gap-3 mt-2"
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
           variants={{
             hidden: {},
             visible: {
               transition: {
-                staggerChildren: 0.2,
+                staggerChildren: 0.15,
               },
             },
           }}
@@ -120,18 +120,18 @@ function CategoryChart({ category }) {
           {category.skills.map((s) => (
             <motion.div
               key={s.name}
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 bg-slate-50 dark:bg-[#2a2f4a] px-3 py-1.5 rounded-full"
               variants={{
-                hidden: { opacity: 0, x: -20 },
-                visible: { opacity: 1, x: 0 },
+                hidden: { opacity: 0, scale: 0.8 },
+                visible: { opacity: 1, scale: 1 },
               }}
-              transition={{ duration: 0.5 }}
+              transition={{ duration: 0.4 }}
             >
               <span
-                className="w-3 h-3 rounded-full"
+                className="w-2.5 h-2.5 rounded-full"
                 style={{ background: s.color }}
               />
-              <span className="text-sm text-slate-700 dark:text-slate-300 flex items-center gap-1">
+              <span className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 flex items-center gap-1">
                 {s.icon} {s.name}
               </span>
             </motion.div>
@@ -147,28 +147,28 @@ export default function Skills() {
   const inView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section id="skills" className="py-28 bg-[#e8eeff] dark:bg-[#0a0f2e] relative overflow-hidden">
-      <div className="max-w-6xl mx-auto px-6 flex flex-col gap-16">
+    <section id="skills" className="py-16 md:py-20 lg:py-28 bg-[#e8eeff] dark:bg-[#0a0f2e] relative overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col gap-12 md:gap-16">
         <motion.div
           ref={ref}
-          className="text-center mb-10"
+          className="text-center mb-6 md:mb-10"
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
         >
-          <span className="inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold tracking-widest uppercase text-[#4A90E2] bg-[#4A90E2]/10 border border-[#4A90E2]/30 mb-4">
+          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold tracking-widest uppercase text-[#4A90E2] bg-[#4A90E2]/10 border border-[#4A90E2]/30 mb-3 md:mb-4">
             My Arsenal
           </span>
-          <h2 className="text-4xl lg:text-5xl font-black text-[#4A90E2] mb-4">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#4A90E2] mb-3 md:mb-4">
             Skills & Technologies
           </h2>
-          <p className="text-base text-slate-500 dark:text-slate-400 max-w-md mx-auto">
+          <p className="text-sm md:text-base text-slate-500 dark:text-slate-400 max-w-md mx-auto">
             Tools and technologies I use to bring ideas to life
           </p>
         </motion.div>
 
-        {/* Horizontal layout for categories */}
-        <div className="flex flex-col lg:flex-row gap-12 justify-center items-start">
+        {/* Responsive grid layout */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 lg:gap-10 justify-items-center">
           {categories.map((cat) => (
             <CategoryChart key={cat.name} category={cat} />
           ))}
